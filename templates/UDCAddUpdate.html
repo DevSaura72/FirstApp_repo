@@ -1,9 +1,10 @@
 {% extends "_Layout.html" %}
 {% block title %}UDC Master{% endblock title %}About
 {% block body %}
+
 <h1 class="text-center">UDC Master</h1>
 
-    <form method="post" action="/AddUDC">
+    <form method="post" action="/UDCAddUpdate">
 
         {% csrf_token %}
         <div class="container-fluid box">
