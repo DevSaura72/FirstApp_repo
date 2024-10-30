@@ -1,8 +1,7 @@
 {% extends "_Layout.html" %}
 {% block title %}UDC Master{% endblock title %}About
 {% block body %}
-
-<h1 class="text-center">UDC Master</h1>
+<!-- <h1 class="text-center">UDC Master</h1> -->
 
     <form method="post" action="/UDCAddUpdate">
 
@@ -62,7 +61,7 @@
                             <div class="form-group">
                                 <label for="parentId">Parent Id</label>
                                 <select class="form-control" id="parentId" name="parentId">
-                                    <option value="">Select Parent</option>
+                                    <option value="0">Select Parent</option>
                                     {% for parent in parents %}
                                         <option value="{{ parent.id }}">{{ parent.Header }}</option> <!-- Adjust the attribute according to your model -->
                                     {% endfor %}
@@ -75,7 +74,7 @@
                             <div class="form-group">
                                 <label for="relationId">Relation Id</label>
                                 <select class="form-control" id="relationId" name="relationId">
-                                    <option value="">Select Relation</option>
+                                    <option value="0">Select Relation</option>
                                     {% for relation in relations %}
                                         <option value="{{ relation.id }}">{{ relation.val1 }}</option> <!-- Adjust the attribute according to your model -->
                                     {% endfor %}

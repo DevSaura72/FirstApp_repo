@@ -2,7 +2,7 @@
 {% block title %}Employee Master{% endblock title %}
 
 {% block body %}
-<div class="container-fluid">
+<!-- <div class="container-fluid">
     <div class="row">
         <div class="col-md-6">
             
@@ -11,8 +11,8 @@
             
         </div>
     </div>
-</div>
-<form method="post" action="/addEmployee"></form>
+</div> -->
+<form method="post" action="/addEmployee">
 {% csrf_token %}
 <div class="container-fluid box">
     <div class="chartbg">
@@ -33,7 +33,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">First Name</label>
-                        <input type="text" class="form-control" id="fName" name="fName" placeholder="User defined header">
+                        <input type="text" class="form-control" id="fName" name="fName" placeholder="Enter first name">
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Last Name</label>
-                        <input type="text" class="form-control" id="lName" name="lName" placeholder="User defined header">
+                        <input type="text" class="form-control" id="lName" name="lName" placeholder="Enter ast name">
                     </div>
                 </div>
             </div>
@@ -49,7 +49,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Date Of Birth</label>
-                        <input type="text" class="form-control" id="dob" name="dob" placeholder="User defined header">
+                        <input type="text" class="form-control" id="dob" name="dob" placeholder="Enter Date Of Birth" readonly>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Email Id</label>
-                        <input type="text" class="form-control" id="emailId" name="emailId" placeholder="User defined header">
+                        <input type="text" class="form-control" id="emailId" name="emailId" placeholder="Enter email Id">
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Contact Number</label>
-                        <input type="text" class="form-control" id="fName" name="fName" placeholder="User defined header">
+                        <input type="text" class="form-control" id="fName" name="contactNo" placeholder="Enter contact number">
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Address Line 1</label>
-                        <input type="text" class="form-control" id="addLine1" name="addLine1" placeholder="User defined header">
+                        <input type="text" class="form-control" id="addLine1" name="addLine1" placeholder="Enter address Line 1">
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                 <div class="card-body">
                     <div class="form-group" id="divUserType">
                         <label for="exampleFormControlInput1">Address Line 2</label>
-                        <input type="text" class="form-control" id="addLine2" name="addLine2" placeholder="User defined header">
+                        <input type="text" class="form-control" id="addLine2" name="addLine2" placeholder="Enter address Line 2">
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                 <div class="card-body">
                     <div class="form-group" >
                         <label for="exampleFormControlInput1">State</label>
-                        <input type="text" class="form-control" id="state" name="state" placeholder="User defined header">
+                        <input type="text" class="form-control" id="state" name="state" placeholder="State">
                     </div>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                 <div class="card-body">
                     <div class="form-group" >
                         <label for="exampleFormControlInput1">City</label>
-                        <input type="text" class="form-control" id="city" name="city" placeholder="User defined header">
+                        <input type="text" class="form-control" id="city" name="city" placeholder="City">
                     </div>
                 </div>
             </div>
@@ -107,7 +107,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Pin Code</label>
-                        <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="User defined header">
+                        <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Enter 6 digit pin code">
                     </div>
                 </div>
             </div>
@@ -115,8 +115,8 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Department</label>
-                        <select class="form-control" id="relationId" name="relationId">
-                            <option value="">Select Department</option>
+                        <select class="form-control" id="depId" name="depId">
+                            <option value="0">Select Department</option>
                             {% for dep in department %}
                                 <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
                             {% endfor %}
@@ -129,9 +129,9 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Work Location</label>
-                        <select class="form-control" id="relationId" name="relationId">
-                            <option value="">Select Working Location</option>
-                            {% for dep in department %}
+                        <select class="form-control" id="workLocationId" name="workLocationId">
+                            <option value="0">Select Working Location</option>
+                            {% for dep in workLocations %}
                                 <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
                             {% endfor %}
                         </select>
@@ -142,9 +142,9 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Employee Type</label>
-                        <select class="form-control" id="relationId" name="relationId">
-                            <option value="">Select Employee Type</option>
-                            {% for dep in department %}
+                        <select class="form-control" id="employeeTypeId" name="employeeTypeId">
+                            <option value="0">Select Employee Type</option>
+                            {% for dep in employeeType %}
                                 <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
                             {% endfor %}
                         </select>
@@ -176,4 +176,17 @@
     </div>
 </div>
 </form>
+
+<script>
+    $(function() {
+        $("#dob").datepicker({
+            dateFormat: "yyyy-mm-dd" // Change format as needed
+        });
+    
+        // Disable editing of the textbox
+        // $("#dob").on('focus', function() {
+        //     $(this).blur(); // Prevents the input from being edited
+        // });
+    });
+    </script>
 {% endblock body %}

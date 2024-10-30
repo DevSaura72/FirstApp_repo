@@ -1,6 +1,9 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\FirstApp",
+    "\\templates"
   ],
+  "SelectedNode": "\\templates\\_Layout.html",
   "PreviewInSolutionExplorer": false
 }
