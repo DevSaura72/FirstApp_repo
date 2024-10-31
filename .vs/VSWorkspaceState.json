@@ -2,8 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\FirstApp",
+    "\\Home",
     "\\templates"
   ],
-  "SelectedNode": "\\templates\\_Layout.html",
+  "SelectedNode": "\\Home\\views.py",
   "PreviewInSolutionExplorer": false
 }

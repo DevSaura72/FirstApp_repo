@@ -1,0 +1,75 @@
+{% extends "_Layout.html" %}
+{% block title %}Emp Master{% endblock title %}About
+{% block body %}
+<h4>Emp Master</h4>
+
+<table id="employeeTable" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date of Birth</th>
+            <th>Email ID</th>
+            <th>Contact No</th>
+            <th>Address</th>
+            <th>Department</th>
+            <th>Employment Type</th>
+            <th>Work Location</th>
+            <th>Created By</th>
+            <th>Created On</th>
+            <th>Updated By</th>
+            <th>Updated On</th>
+            <th>Deleted By</th>
+            <th>Deleted On</th>
+            <th>Is Deleted</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>{{ employee.id }}</td>
+            <td>{{ employee.FirstName }}</td>
+            <td>{{ employee.LastName }}</td>
+            <td>{{ employee.DOB }}</td>
+            <td>{{ employee.EmailId }}</td>
+            <td>{{ employee.ContactNo }}</td>
+            <td>{{ employee.Address }}</td>
+            <td>{{ employee.DepartmentId }}</td>
+            <td>{{ employee.EmploymentTypeID }}</td>
+            <td>{{ employee.WorkLocationID }}</td>
+            <td>{{ employee.CreatedBy }}</td>
+            <td>{{ employee.CreatedOn }}</td>
+            <td>{{ employee.UpdatedBy }}</td>
+            <td>{{ employee.UpdatedOn }}</td>
+            <td>{{ employee.DeletedBy }}</td>
+            <td>{{ employee.DeletedOn }}</td>
+            <td>{{ employee.IsDeleted }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+
+<!-- Initialize DataTable -->
+<!-- <script type="text/javascript">
+    $(document).ready(function() {
+        $('#employeeTable').DataTable();
+    });
+</script> -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#employeeTable').DataTable({
+            responsive: true, // Optional: makes the table responsive
+            paging: true, // Optional: enable pagination
+            searching: true, // Optional: enable searching
+            ordering: true, // Optional: enable sorting
+            order: [[0, 'asc']] // Optional: initial order by first column
+        });
+    });
+</script>
+
+
+{% endblock body %}

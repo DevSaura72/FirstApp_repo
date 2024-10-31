@@ -1,0 +1,83 @@
+{% extends "_Layout.html" %}
+{% block title %}UDC Master{% endblock title %}About
+{% block body %}
+<h4>UDC Master</h4>
+
+<table id="UDCHeaders" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Header</th>
+            <th>description</th>
+            <th>IsDeleted</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for udc in headers %}
+        <tr>
+            <td>{{ udc.id }}</td>
+            <td>{{ udc.Header }}</td>
+            <td>{{ udc.description }}</td>
+            <td>{{ udc.IsDeleted }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br>
+<table id="UDCData" class="display">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>val1</th>
+            <th>val2</th>
+            <th>description</th>
+            <th>ParentId</th>
+            <th>RelationId</th>
+            <th>IsDeleted</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for udc in udcs %}
+        <tr>
+            <td>{{ udc.id }}</td>
+            <td>{{ udc.val1 }}</td>
+            <td>{{ udc.val2 }}</td>
+            <td>{{ udc.description }}</td>
+            <td>{{ udc.ParentId }}</td>
+            <td>{{ udc.RelationId }}</td>
+            <td>{{ udc.IsDeleted }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Initialize DataTable -->
+<!-- <script type="text/javascript">
+    $(document).ready(function() {
+        $('#employeeTable').DataTable();
+    });
+</script> -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#UDCHeaders').DataTable({
+            responsive: true, // Optional: makes the table responsive
+            paging: true, // Optional: enable pagination
+            searching: true, // Optional: enable searching
+            ordering: true, // Optional: enable sorting
+            order: [[0, 'asc']] // Optional: initial order by first column
+        });
+
+        
+        $('#UDCData').DataTable({
+            responsive: true, // Optional: makes the table responsive
+            paging: true, // Optional: enable pagination
+            searching: true, // Optional: enable searching
+            ordering: true, // Optional: enable sorting
+            order: [[0, 'asc']] // Optional: initial order by first column
+        });
+    });
+</script>
+
+
+{% endblock body %}

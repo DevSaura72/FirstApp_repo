@@ -54,6 +54,8 @@ def AddEmployee(request):
     except Exception as e:
             return HttpResponse(f"Error occurred now: {e}")
 
+def empMaster(request):
+    return render(request, 'EmployeeMasterIndex.html')
     
 def UDCAddUpdate(request):
     try:
@@ -93,3 +95,12 @@ def UDCAddUpdate(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
+def emplMaster(request):
+    employees = Employee.objects.all()
+    return render(request, 'EmpMaster.html', {'employees': employees})
+
+def UDCMaster(request):
+    udc = UDC.objects.filter(IsHeader = False, IsDeleted = False)
+    headers = UDC.objects.filter(IsHeader = True, IsDeleted = False)
+    return render(request, 'UDCMaster.html', {'udcs': udc, 'headers' : headers})
