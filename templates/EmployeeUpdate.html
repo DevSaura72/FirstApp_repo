@@ -1,5 +1,5 @@
 {% extends "_Layout.html" %}
-{% block title %}Employee Master{% endblock title %}
+{% block title %}Update Employee{% endblock title %}
 
 {% block body %}
 <!-- <div class="container-fluid">
@@ -12,15 +12,9 @@
         </div>
     </div>
 </div> -->
-{% if edit %}
 <h3>Edit Employee</h3>
-<form method="post" action="/editEmployee">
-{% else %}
-<h3>Add Employee</h3>
-<form method="post" action="/addEmployee">
-{% endif %}
-
-{% csrf_token %}
+<form method="post" action="{% url 'editEmployee' employee.id %}">
+    {% csrf_token %}
 <div class="container-fluid box">
     <div class="chartbg">
         <div class="row">
@@ -40,7 +34,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">First Name</label>
-                        <input type="text" class="form-control" id="fName" name="fName" placeholder="Enter first name" required>
+                        <input type="text" class="form-control" id="fName" name="fName" value="{{ employee.FirstName }}" placeholder="Enter first name">
                     </div>
                 </div>
             </div>
@@ -48,7 +42,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Last Name</label>
-                        <input type="text" class="form-control" id="lName" name="lName" placeholder="Enter ast name" required>
+                        <input type="text" class="form-control" id="lName" name="lName" value="{{ employee.LastName }}" placeholder="Enter ast name">
                     </div>
                 </div>
             </div>
@@ -56,16 +50,15 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Date Of Birth</label>
-                        <input type="text" class="form-control" id="dob" name="dob" placeholder="Enter Date Of Birth" readonly>
+                        <input type="text" class="form-control" id="dob" name="dob" value="{{ employee.DOB }}" placeholder="Enter Date Of Birth" readonly>
                     </div>
                 </div>
             </div>
-
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Email Id</label>
-                        <input type="email" class="form-control" id="emailId" name="emailId" placeholder="Enter email Id" required>
+                        <input type="text" class="form-control" id="emailId" name="emailId" value="{{ employee.EmailId }}" placeholder="Enter email Id">
                     </div>
                 </div>
             </div>
@@ -73,8 +66,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Contact Number</label>
-                        <input type="text" class="form-control" id="contactNo" name="contactNo" placeholder="Enter contact number" 
-       required pattern="\d{10}" maxlength="10" title="Please enter a 10-digit contact number" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                        <input type="text" class="form-control" id="fName" name="contactNo" value="{{ employee.ContactNo }}" placeholder="Enter contact number">
                     </div>
                 </div>
             </div>
@@ -82,7 +74,7 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Address Line 1</label>
-                        <input type="text" class="form-control" id="addLine1" name="addLine1" placeholder="Enter address Line 1" required>
+                        <input type="text" class="form-control" id="addLine1" name="addLine1" value="{{ address_parts.0 }}" placeholder="Enter address Line 1">
                     </div>
                 </div>
             </div>
@@ -90,7 +82,7 @@
                 <div class="card-body">
                     <div class="form-group" id="divUserType">
                         <label for="exampleFormControlInput1">Address Line 2</label>
-                        <input type="text" class="form-control" id="addLine2" name="addLine2" placeholder="Enter address Line 2">
+                        <input type="text" class="form-control" id="addLine2" name="addLine2" value="{{ address_parts.1 }}" placeholder="Enter address Line 2">
                     </div>
                 </div>
             </div>
@@ -98,7 +90,7 @@
                 <div class="card-body">
                     <div class="form-group" >
                         <label for="exampleFormControlInput1">State</label>
-                        <input type="text" class="form-control" id="state" name="state" placeholder="State" required>
+                        <input type="text" class="form-control" id="state" name="state" value="{{ address_parts.2 }}" placeholder="State">
                     </div>
                 </div>
             </div>
@@ -106,7 +98,7 @@
                 <div class="card-body">
                     <div class="form-group" >
                         <label for="exampleFormControlInput1">City</label>
-                        <input type="text" class="form-control" id="city" name="city" placeholder="City" required>
+                        <input type="text" class="form-control" id="city" name="city" value="{{ address_parts.3 }}" placeholder="City">
                     </div>
                 </div>
             </div>
@@ -115,51 +107,51 @@
                 <div class="card-body">
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Pin Code</label>
-                        <input type="text" class="form-control" id="pinCode" name="pinCode" placeholder="Enter 6 digit pin code" 
-       required pattern="\d{06}"  minlength="6" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 6);">
+                        <input type="text" class="form-control" id="pinCode" name="pinCode" value="{{ address_parts.4 }}" placeholder="Enter 6 digit pin code">
                     </div>
                 </div>
             </div>
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Department</label>
-                        <select class="form-control" id="depId" name="depId" required>
-                            <option value="" disabled selected>Select Department</option>
+                        <label for="depId">Department</label>
+                        <select class="form-control" id="depId" name="depId">
+                            <option value="0">Select Department</option>
                             {% for dep in department %}
-                                <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
+                                <option value="{{ dep.id }}" {% if dep.id == employee.DepartmentId.id %}selected{% endif %}>{{ dep.val1 }}</option> 
                             {% endfor %}
                         </select>
                     </div>
                 </div>
             </div>
-       
+            
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Work Location</label>
-                        <select class="form-control" id="workLocationId" name="workLocationId" required>
-                            <option value="" disabled selected>Select Working Location</option>
-                            {% for dep in workLocations %}
-                                <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
+                        <label for="workLocationId">Work Location</label>
+                        <select class="form-control" id="workLocationId" name="workLocationId">
+                            <option value="0">Select Working Location</option>
+                            {% for loc in workLocations %}
+                                <option value="{{ loc.id }}" {% if employee.WorkLocationID and loc.id == employee.WorkLocationID.id %}selected{% endif %}>{{ loc.val1 }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
             </div>    
+            
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Employee Type</label>
-                        <select class="form-control" id="employeeTypeId" name="employeeTypeId" required>
-                            <option value="" disabled selected>Select Employee Type</option>
-                            {% for dep in employeeType %}
-                                <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
+                        <label for="employeeTypeId">Employee Type</label>
+                        <select class="form-control" id="employeeTypeId" name="employeeTypeId">
+                            <option value="0">Select Employee Type</option>
+                            {% for empType in employeeType %}
+                                <option value="{{ empType.id }}" {% if employee.EmploymentTypeID and empType.id == employee.EmploymentTypeID.id %}selected{% endif %}>{{ empType.val1 }}</option>
                             {% endfor %}
                         </select>
                     </div>
                 </div>
-            </div> 
+            </div>
             <div class="col-12 col-sm-6 col-md-3">
                 <div class="card-body">
                     <div class="form-group">
@@ -180,11 +172,16 @@
                     <button class="btn btn-primary" type="submit">submit</button>
                 </div>
             </div> 
-       </div>               
+       </div>  
+       <pre>
+        Employee WorkLocationID: {{ employee.WorkLocationID.id}}
+    </pre>
+    <pre>
+        Employee EmploymentTypeID: {{ employee.EmploymentTypeID.id}}
+    </pre>             
        </div>
     </div>
 </div>
-
 </form>
 
 <script>

@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from datetime import datetime
 from .models import UDC, Employee
 from django.contrib import messages
@@ -12,21 +12,61 @@ def index(request):
     }
     return render(request, 'index.html')
 
+#EMPLOYEE RELATED FUNCTIONS    
+def emplMaster(request):
+    return render(request, 'EmpMaster.html')
+
+def GetemployeeData(request):
+    emp = Employee.objects.filter(IsDeleted = False)
+
+    _list = []
+    for record in emp:
+        
+        Dept = UDC.objects.filter(id=record.DepartmentId.id if record.DepartmentId else None, IsDeleted=False).first()
+        dept_name = Dept.val1 if Dept else None
+        
+        EmpType = UDC.objects.filter(id=record.EmploymentTypeID.id if record.EmploymentTypeID else None, IsDeleted=False).first()
+        empType_name = EmpType.val1 if EmpType else None
+        
+        WorkLocation = UDC.objects.filter(id=record.WorkLocationID.id if record.WorkLocationID else None, IsDeleted=False).first()
+        workLocation_name = WorkLocation.val1 if WorkLocation else None
+        # Append the required data, including the parent name
+        _list.append({
+            'id': record.id,
+            'FirstName': record.FirstName,
+            'LastName': record.LastName,
+            'DOB': record.DOB,
+            'EmailId': record.EmailId,
+            'ContactNo': record.ContactNo,
+            'Address': record.Address.replace("|",", "),
+            'DepartmentId': dept_name,
+            'EmploymentTypeID': empType_name,
+            'WorkLocationID': workLocation_name,
+            'IsDeleted': record.IsDeleted
+        })
+    total_entries = emp.count()
+    return JsonResponse({
+        'data': _list,
+        #'draw' : command.draw,
+        'recordsFiltered' : total_entries,
+        'recordsTotal' : total_entries
+    })
+
 def AddEmployee(request):
     try:
-        department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId = 4)
-        workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId = 7)
-        employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId = 10)
+        department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=1)
+        workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=4)
+        employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=7)
         if request.method == "POST":
             fName=request.POST.get("fName")
             lName=request.POST.get("lName")
             dOB= "1998-08-24"               #request.POST.get("dob")
             eId=request.POST.get("emailId")
             cNo=request.POST.get("contactNo")
-            add=request.POST.get("addLine1") + "|" + request.POST.get("addLine2") + "|" + request.POST.get("state") + "|" + request.POST.get("pinCode")
+            add=request.POST.get("addLine1") + "|" + request.POST.get("addLine2") + "|" + request.POST.get("city") + "|" + request.POST.get("state") + "|" + request.POST.get("pinCode")
             depId=request.POST.get("depId")
-            empTypeID=request.POST.get("workLocationId")
-            workLocationID = request.POST.get("employeeTypeId")
+            empTypeID = request.POST.get("employeeTypeId")
+            workLocationID = request.POST.get("workLocationId")
 
             #  if request.POST.get("isActive") == "true":
             #       isActive = True
@@ -49,15 +89,76 @@ def AddEmployee(request):
             
             emp.save()
             messages.success(request, "Profile details updated.")
-            return render(request, 'EmployeeAddUpdate.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType})
+            return render(request, 'EmployeeAddUpdate.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType, 'edit':False})
         else:
-             return render(request, 'EmployeeAddUpdate.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType})
+             return render(request, 'EmployeeAddUpdate.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType, 'edit':False})
     except Exception as e:
             return HttpResponse(f"Error occurred now: {e}")
-
-def empMaster(request):
-    return render(request, 'EmployeeMasterIndex.html')
     
+def deleteEmployee(request, id):
+    try:
+        emp = Employee.objects.get(id=id)
+        emp.IsDeleted = True
+        emp.save()
+        messages.success(request, "Employee deleted successfuly .")
+    except Employee.DoesNotExist:
+        #messages.error(request, "Employee not found.")
+        return render(request, 'EmpMaster.html', {'error': 'Employee not found.'})
+    return redirect('emplMaster')
+
+def editEmployee(request, id):
+# Fetch the employee instance or return 404 if not found
+    employee = get_object_or_404(Employee, id=id)
+
+    # Fetch dropdown data for departments, work locations, and employee types
+    department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=1)
+    workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=4)
+    employeeType = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=7)
+    address_parts = employee.Address.split('|') if employee.Address else ['', '', '', '','']
+
+
+    if request.method == "POST":
+        # Get data from the form
+        fName = request.POST.get("fName")
+        lName = request.POST.get("lName")
+        dOB = "1998-08-24"#request.POST.get("dob")  # Make sure the input for DOB is a valid date format
+        eId = request.POST.get("emailId")
+        cNo = request.POST.get("contactNo")
+        add = request.POST.get("addLine1") + "|" + request.POST.get("addLine2") + "|" + request.POST.get("city") + "|" + request.POST.get("state") + "|" + request.POST.get("pinCode")
+        depId = request.POST.get("depId")
+        empTypeID = request.POST.get("employeeTypeId")
+        workLocationID = request.POST.get("workLocationId")
+
+        # Update employee fields
+        employee.id = id
+        employee.FirstName = fName
+        employee.LastName = lName
+        employee.DOB = dOB
+        employee.EmailId = eId
+        employee.ContactNo = cNo
+        employee.Address = add
+        employee.DepartmentId = UDC.objects.get(id=depId) if depId and depId != '0' else None
+        employee.EmploymentTypeID = UDC.objects.get(id=empTypeID) if empTypeID and empTypeID != '0' else None
+        employee.WorkLocationID = UDC.objects.get(id=workLocationID) if workLocationID and workLocationID != '0' else None
+        employee.UpdatedOn = datetime.now()  # Set updated timestamp
+
+        # Save the updated employee record
+        employee.save()
+        messages.success(request, "Employee details updated successfully.")
+        return redirect('emplMaster')  # Redirect to the employee list or another appropriate page
+
+    # Prepopulate the form with existing employee data
+    context = {
+        'employee': employee,
+        'department': department,
+        'workLocations': workLocations,
+        'employeeType': employeeType,
+        'address_parts': address_parts,
+    }
+    return render(request, 'EmployeeUpdate.html', context)
+
+
+#UDC RELATED FUNCTIONS
 def UDCAddUpdate(request):
     try:
         parents = UDC.objects.filter(IsHeader = True, IsDeleted = False)
@@ -97,10 +198,6 @@ def UDCAddUpdate(request):
 def contact(request):
     return render(request, 'contact.html')
 
-def emplMaster(request):
-    employees = Employee.objects.all()
-    return render(request, 'EmpMaster.html', {'employees': employees})
-
 def UDCMaster(request):
     udc = UDC.objects.filter(IsHeader = False, IsDeleted = False)
     headers = UDC.objects.filter(IsHeader = True, IsDeleted = False)
@@ -136,62 +233,7 @@ def GetUDCData(request):
 
     return JsonResponse({'data': _list})
 
-def GetemployeeData(request):
-    #udc = UDC.objects.filter(IsHeader = False, IsDeleted = False)
-    emp = Employee.objects.filter(IsDeleted = False)
-    emp_list = list(emp.values('id', 'FirstName', 'LastName', 'DOB', 'EmailId', 'ContactNo', 'Address', 'DepartmentId', 'EmploymentTypeID', 'WorkLocationID', 'IsDeleted'))
-    return JsonResponse({'data': emp_list})
-
-def deleteEmployee(request, id):
-     return render(request, 'test.html')
-
-def editEmployee(request, id):
-     # Fetch the employee instance or return 404 if not found
-    employee = Employee.objects.filter(Employee, id=id)
-    
-    # Fetch dropdown data for departments, work locations, and employee types
-    department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=4)
-    workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=7)
-    employeeType = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=10)
-
-    if request.method == "POST":
-        # Get data from the form
-        fName = request.POST.get("fName")
-        lName = request.POST.get("lName")
-        dOB = request.POST.get("dob")  # Make sure the input for DOB is a valid date format
-        eId = request.POST.get("emailId")
-        cNo = request.POST.get("contactNo")
-        add = request.POST.get("addLine1") + "|" + request.POST.get("addLine2") + "|" + request.POST.get("state") + "|" + request.POST.get("pinCode")
-        depId = request.POST.get("depId")
-        empTypeID = request.POST.get("employeeTypeId")
-        workLocationID = request.POST.get("workLocationId")
-
-        # Update employee fields
-        employee.FirstName = fName
-        employee.LastName = lName
-        employee.DOB = dOB
-        employee.EmailId = eId
-        employee.ContactNo = cNo
-        employee.Address = add
-        employee.DepartmentId = UDC.objects.get(id=depId) if depId else None
-        employee.EmploymentTypeID = UDC.objects.get(id=empTypeID) if empTypeID else None
-        employee.WorkLocationID = UDC.objects.get(id=workLocationID) if workLocationID else None
-        employee.UpdatedOn = datetime.now()  # Set updated timestamp
-
-        # Save the updated employee record
-        employee.save()
-        messages.success(request, "Employee details updated successfully.")
-        return redirect('employee_list')  # Redirect to the employee list or wherever needed
-
-    else:
-        # Prepopulate the form with existing employee data
-        context = {
-            'employee': employee,
-            'department': department,
-            'workLocations': workLocations,
-            'employeeType': employeeType,
-        }
-        return render(request, 'EmployeeAddUpdate.html', context)
+     
 
 def test(request):
     return render(request, 'test.html')

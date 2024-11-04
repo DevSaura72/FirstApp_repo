@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\FirstApp",
+    "\\Home",
     "\\templates"
   ],
+  "SelectedNode": "\\Home\\views.py",
   "PreviewInSolutionExplorer": false
 }

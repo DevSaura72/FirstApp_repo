@@ -20,7 +20,9 @@ body, html {
 
 }
 
-
+.button-spacing {
+    margin-right: 10px; /* Adjust as needed */
+}
 
 .top-container {
     background-color: #CFCFCF;

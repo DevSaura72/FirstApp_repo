@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 from django.contrib.messages import constants as messages
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -75,28 +76,28 @@ WSGI_APPLICATION = 'FirstApp.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-#SQL server database
 DATABASES = {
-    'default':{
-        'ENGINE':'mssql',
-        'NAME':'Demo_WebApp',
-        'USER':'',                              # Keep it blank
-        'PASSWORD':'',                          # Keep it blank
-        'HOST':'DESKTOP-D4RNR9E\SQLEXPRESS',    # "localhost" is also possible
-        # 'PORT':'',                            # Can be removed
-        'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',
-            'Trusted_Connection': 'yes',
-        },
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+#SQL server database
+# DATABASES = {
+#     'default':{
+#         'ENGINE':'mssql',
+#         'NAME':'Demo_WebApp',
+#         'USER':'',                              # Keep it blank
+#         'PASSWORD':'',                          # Keep it blank
+#         'HOST':'DESKTOP-D4RNR9E\SQLEXPRESS',    # "localhost" is also possible
+#         # 'PORT':'',                            # Can be removed
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 17 for SQL Server',
+#             'Trusted_Connection': 'yes',
+#         },
+#     }
+# }
 
 
 # Password validation
@@ -134,6 +135,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 # Default primary key field type
