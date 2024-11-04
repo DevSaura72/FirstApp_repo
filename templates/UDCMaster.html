@@ -3,53 +3,71 @@
 {% block body %}
 <h4>UDC Master</h4>
 
-<table id="UDCHeaders" class="display">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Header</th>
-            <th>description</th>
-            <th>IsDeleted</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for udc in headers %}
-        <tr>
-            <td>{{ udc.id }}</td>
-            <td>{{ udc.Header }}</td>
-            <td>{{ udc.description }}</td>
-            <td>{{ udc.IsDeleted }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container-fluid box">
+    <div class="chartbg">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-body">
+                    <h4 class="heading">
+                        Headers
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <div id="Header-grid" data-step="6" data-intro="Header Info"></div>
+                <table id="UDCHeaders" class="display nowrap">
+                    {% comment %} <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Header</th>
+                            <th>description</th>
+                            <th>IsDeleted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for udc in headers %}
+                        <tr>
+                            <td>{{ udc.id }}</td>
+                            <td>{{ udc.Header }}</td>
+                            <td>{{ udc.description }}</td>
+                            <td>{{ udc.IsDeleted }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody> {% endcomment %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <br>
-<table id="UDCData" class="display">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>val1</th>
-            <th>val2</th>
-            <th>description</th>
-            <th>ParentId</th>
-            <th>RelationId</th>
-            <th>IsDeleted</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for udc in udcs %}
-        <tr>
-            <td>{{ udc.id }}</td>
-            <td>{{ udc.val1 }}</td>
-            <td>{{ udc.val2 }}</td>
-            <td>{{ udc.description }}</td>
-            <td>{{ udc.ParentId }}</td>
-            <td>{{ udc.RelationId }}</td>
-            <td>{{ udc.IsDeleted }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container-fluid box">
+    <div class="chartbg">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-body">
+                    <h4 class="heading">
+                        Dropdown Data
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <div id="Data-grid" data-step="6" data-intro="Data Info"></div>
+                <table id="UDCData" class="display nowrap">
+                    
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Initialize DataTable -->
 <!-- <script type="text/javascript">
@@ -59,25 +77,188 @@
 </script> -->
 
 <script type="text/javascript">
+
     $(document).ready(function() {
-        $('#UDCHeaders').DataTable({
-            responsive: true, // Optional: makes the table responsive
-            paging: true, // Optional: enable pagination
-            searching: true, // Optional: enable searching
-            ordering: true, // Optional: enable sorting
-            order: [[0, 'asc']] // Optional: initial order by first column
-        });
-
-        
-        $('#UDCData').DataTable({
-            responsive: true, // Optional: makes the table responsive
-            paging: true, // Optional: enable pagination
-            searching: true, // Optional: enable searching
-            ordering: true, // Optional: enable sorting
-            order: [[0, 'asc']] // Optional: initial order by first column
-        });
+        LoadHeaderGrid();
+        LoadDataGrid();
+        $('[data-toggle="tooltip"]').tooltip(); 
     });
+
+    
+    function LoadHeaderGrid() {
+        if ($.fn.DataTable.isDataTable('#UDCHeaders')) {
+            $('#UDCHeaders').DataTable().clear().destroy();
+        }
+        $('#UDCHeaders').DataTable({
+            "dom": 'Blfrtip',
+            //"sScrollY": '50vh',
+            //"sScrollX": true,
+            "initComplete": function (settings, json) {
+                $("#UDCHeaders").wrap("<div id='UDCHeadersParent' style='overflow:auto; width:100%;position:relative;'></div>");
+            },
+            "scrollCollapse": true,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "ordering": false,
+            "drawCallback": function (settings) {
+                //onDataBound();
+            },
+            //"fixedColumns": {
+            //    leftColumns: 0
+            //},
+            "ajax": {
+                "url": "/GetUDCHeaders",
+                "type": "GET",
+                "datatype": "json",
+                //"data": RequestSearchData()
+            },
+            "columns": [
+            {
+                "data": "id",
+                "name": "Id",
+                "title": "Id",
+                "className": "text-center"
+            },
+                {
+                    "data": "Header",
+                    "name": "Header",
+                    "title": "Header",
+                    "className": "text-left"
+                },
+                {
+                    "data": "IsHeader",
+                    "name": "IsHeader",
+                    "title": "IsHeader",
+                    "render": function (data) {
+                        return '<span data-toggle="tooltip" title="Is active?">' + getIcon(data) + '</span>';
+                        // getToolTip(data.CSMTeamStatus, data.CSMTeamDays, data.CSMTeamApprovedBy);
+                    }
+                },
+                {
+                    "data": "description",
+                    "name": "description",
+                    "title": "description",
+                    "className": "text-center"
+                },
+                {
+                    "data": "IsDeleted",
+                    "name": "IsDeleted",
+                    "title": "IsDeleted",
+                    "render": function (data) {
+                        return '<span data-toggle="tooltip" title="Is active?"><i class="fa ' + (data ? 'fa-check text-success' : 'fa-times text-danger') + '" aria-hidden="true"></i></span>';
+                        // getToolTip(data.CSMTeamStatus, data.CSMTeamDays, data.CSMTeamApprovedBy);
+                    }
+                }
+            ],
+    
+            "columnDefs": [
+                {
+                    "targets": "_all",
+                    "className": "text-center",
+                    "autoWidth": true
+                }],
+            "lengthMenu": [[15, 30, 45, 60], [15, 30, 45, 60]],
+            //"lengthMenu": [[2, 3, 4, 6], [2, 3, 4, 6]],
+            "buttons": []
+        });
+    }
+    
+    function LoadDataGrid() {
+        if ($.fn.DataTable.isDataTable('#UDCData')) {
+            $('#UDCData').DataTable().clear().destroy();
+        }
+        $('#UDCData').DataTable({
+            "dom": 'Blfrtip',
+            //"sScrollY": '50vh',
+            //"sScrollX": true,
+            "initComplete": function (settings, json) {
+                $("#UDCData").wrap("<div id='UDCDataParent' style='overflow:auto; width:100%;position:relative;'></div>");
+            },
+            "scrollCollapse": true,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "ordering": false,
+            "drawCallback": function (settings) {
+                //onDataBound();
+            },
+            //"fixedColumns": {
+            //    leftColumns: 0
+            //},
+            "ajax": {
+                "url": "/GetUDCData",
+                "type": "GET",
+                "datatype": "json",
+                //"data": RequestSearchData()
+            },
+            "columns": [
+                {
+                    "data": "val1",
+                    "name": "Value 1",
+                    "title": "Value 1",
+                    "className": "text-left"
+                },
+                {
+                    "data": "val2",
+                    "name": "Value 2",
+                    "title": "Value 2",
+                    "className": "text-left"
+                },
+                {
+                    "data": "ParentId",
+                    "name": "Parent",
+                    "title": "Parent",
+                    "className": "text-left"
+                },
+                {
+                    "data": "RelationId",
+                    "name": "RelationId",
+                    "title": "RelationId",
+                    "className": "text-left"
+                },
+                {
+                    "data": "IsDeleted",
+                    "name": "Is Deleted",
+                    "title": "Is Deleted",
+                    "render": function (data) {
+                        return '<span data-toggle="tooltip" title="Is active?"><i class="fa ' + (data ? 'fa-check text-success' : 'fa-times text-danger') + '" aria-hidden="true"></i></span>';
+                        // getToolTip(data.CSMTeamStatus, data.CSMTeamDays, data.CSMTeamApprovedBy);
+                    }
+                }
+            ],
+    
+            "columnDefs": [
+                {
+                    "targets": "_all",
+                    "className": "text-center",
+                    "autoWidth": true
+                }],
+            "lengthMenu": [[15, 30, 45, 60], [15, 30, 45, 60]],
+            //"lengthMenu": [[2, 3, 4, 6], [2, 3, 4, 6]],
+            "buttons": []
+        });
+    }
+
+    function getToolTip(Days, ApprovedBy) {
+        var tooltip = '';
+        tooltip += 'Days: ' + Days + '\n';
+        tooltip += 'Approved By: ' + ApprovedBy + '\n';
+        return tooltip;
+    }
+    
+    function getIcon(status) {
+    
+        if (status == false) {
+            return "<i class='fa fa-times text-danger'  aria-hidden='true'></i>"
+        }
+        else {
+            return "<i class='fa fa-check text-success'  aria-hidden='true'></i>"
+        }
+    
+    }
+    
 </script>
-
-
 {% endblock body %}

@@ -3,72 +3,186 @@
 {% block body %}
 <h4>Emp Master</h4>
 
-<table id="employeeTable" class="display">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Date of Birth</th>
-            <th>Email ID</th>
-            <th>Contact No</th>
-            <th>Address</th>
-            <th>Department</th>
-            <th>Employment Type</th>
-            <th>Work Location</th>
-            <th>Created By</th>
-            <th>Created On</th>
-            <th>Updated By</th>
-            <th>Updated On</th>
-            <th>Deleted By</th>
-            <th>Deleted On</th>
-            <th>Is Deleted</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for employee in employees %}
-        <tr>
-            <td>{{ employee.id }}</td>
-            <td>{{ employee.FirstName }}</td>
-            <td>{{ employee.LastName }}</td>
-            <td>{{ employee.DOB }}</td>
-            <td>{{ employee.EmailId }}</td>
-            <td>{{ employee.ContactNo }}</td>
-            <td>{{ employee.Address }}</td>
-            <td>{{ employee.DepartmentId }}</td>
-            <td>{{ employee.EmploymentTypeID }}</td>
-            <td>{{ employee.WorkLocationID }}</td>
-            <td>{{ employee.CreatedBy }}</td>
-            <td>{{ employee.CreatedOn }}</td>
-            <td>{{ employee.UpdatedBy }}</td>
-            <td>{{ employee.UpdatedOn }}</td>
-            <td>{{ employee.DeletedBy }}</td>
-            <td>{{ employee.DeletedOn }}</td>
-            <td>{{ employee.IsDeleted }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
+<div class="container-fluid box">
+    <div class="chartbg">
+        <div class="row">
+            <div class="col-12">
+                <div class="card-body">
+                    <h4 class="heading">
+                        Employees
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <div id="Header-grid" data-step="6" data-intro="Header Info"></div>
+<table id="employeeDataTable" class="display">
+
 </table>
-
-
-
-<!-- Initialize DataTable -->
-<!-- <script type="text/javascript">
-    $(document).ready(function() {
-        $('#employeeTable').DataTable();
-    });
-</script> -->
+            </div>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
+
     $(document).ready(function() {
-        $('#employeeTable').DataTable({
-            responsive: true, // Optional: makes the table responsive
-            paging: true, // Optional: enable pagination
-            searching: true, // Optional: enable searching
-            ordering: true, // Optional: enable sorting
-            order: [[0, 'asc']] // Optional: initial order by first column
-        });
+        LoadEmpGrid();
+        $('[data-toggle="tooltip"]').tooltip(); 
     });
+
+    
+    function LoadEmpGrid() {
+        if ($.fn.DataTable.isDataTable('#employeeDataTable')) {
+            $('#employeeDataTable').DataTable().clear().destroy();
+        }
+        $('#employeeDataTable').DataTable({
+            "dom": 'Blfrtip',
+            //"sScrollY": '50vh',
+            //"sScrollX": true,
+            "initComplete": function (settings, json) {
+                $("#employeeDataTable").wrap("<div id='employeeDataTableParent' style='overflow:auto; width:100%;position:relative;'></div>");
+            },
+            "scrollCollapse": true,
+            "processing": true, // for show progress bar
+            "serverSide": true, // for process server side
+            "filter": false, // this is for disable filter (search box)
+            "orderMulti": false, // for disable multiple column at once
+            "ordering": false,
+            "drawCallback": function (settings) {
+                //onDataBound();
+            },
+            //"fixedColumns": {
+            //    leftColumns: 0
+            //},
+            "ajax": {
+                "url": "/GetemployeeData",
+                "type": "GET",
+                "datatype": "json",
+                //"data": RequestSearchData()
+            },
+            "columns": [
+            {
+                "data": "FirstName",
+                "name": "First Name",
+                "title": "FirstName",
+                "className": "text-center"
+            },
+                {
+                    "data": "LastName",
+                    "name": "Last Name",
+                    "title": "LastName",
+                    "className": "text-left"
+                },
+                {
+                    "data": "DOB",
+                    "name": "Date Of Birth",
+                    "title": "DOB",
+                    "className": "text-left"
+                },
+                {
+                    "data": "EmailId",
+                    "name": "EmailId",
+                    "title": "EmailId",
+                    "className": "text-left"
+                },
+                {
+                    "data": "ContactNo",
+                    "name": "ContactNo",
+                    "title": "ContactNo",
+                    "className": "text-center"
+                },
+                {
+                    "data": "Address",
+                    "name": "Address",
+                    "title": "Address",
+                    "className": "text-center"
+                },
+                {
+                    "data": "DepartmentId",
+                    "name": "DepartmentId",
+                    "title": "DepartmentId",
+                    "className": "text-center"
+                },
+                {
+                    "data": "EmploymentTypeID",
+                    "name": "EmploymentTypeID",
+                    "title": "EmploymentTypeID",
+                    "className": "text-center"
+                },
+                {
+                    "data": "WorkLocationID",
+                    "name": "WorkLocationID",
+                    "title": "WorkLocationID",
+                    "className": "text-center"
+                },
+                {
+                    "data": "IsDeleted",
+                    "name": "IsDeleted",
+                    "title": "IsDeleted",
+                    "render": function (data) {
+                        return '<span data-toggle="tooltip" title="Is active?"><i class="fa ' + (data ? 'fa-check text-success' : 'fa-times text-danger') + '" aria-hidden="true"></i></span>';
+                        // getToolTip(data.CSMTeamStatus, data.CSMTeamDays, data.CSMTeamApprovedBy);
+                    }
+                },
+                {
+                    "data": "id",
+                    "name": "Action",
+                    "title": "Action",
+                    render: function (data) {
+                        return `
+        <a href="/editEmployee/${data}/">
+            <span data-toggle="tooltip" title="Edit">
+                <i class="fas fa-edit" aria-hidden="true" style="color: blue;"></i>
+            </span>
+        </a>
+        <a href="/deleteEmployee/${data}/" onclick="return confirm('Are you sure you want to delete this item?');">
+            <span data-toggle="tooltip" title="Delete">
+                <i class="fas fa-trash" aria-hidden="true" style="color: red;"></i>
+            </span>
+        </a>
+    `;
+                    }
+                    //"render": function (data) {
+                    //   return '<span data-toggle="tooltip" title="Edit"><i class="fas fa-edit" aria-hidden="true" style="color: blue;"></i></span>';
+                    //    //return '<a href="/Master/User/Edit/' + data + '"><span data-toggle="tooltip" title="Edit"><i class="fas fa-edit" aria-hidden="true" style="color: blue;></i></a>';
+                        // getToolTip(data.CSMTeamStatus, data.CSMTeamDays, data.CSMTeamApprovedBy);
+                    //}
+                }
+            ],
+    
+            "columnDefs": [
+                {
+                    "targets": "_all",
+                    "className": "text-center",
+                    "autoWidth": true
+                }],
+            "lengthMenu": [[15, 30, 45, 60], [15, 30, 45, 60]],
+            //"lengthMenu": [[2, 3, 4, 6], [2, 3, 4, 6]],
+            "buttons": []
+        });
+    }
+
+    function getToolTip(Days, ApprovedBy) {
+        var tooltip = '';
+        tooltip += 'Days: ' + Days + '\n';
+        tooltip += 'Approved By: ' + ApprovedBy + '\n';
+        return tooltip;
+    }
+    
+    function getIcon(status) {
+    
+        if (status == false) {
+            return "<i class='fa fa-times text-danger'  aria-hidden='true'></i>"
+        }
+        else {
+            return "<i class='fa fa-check text-success'  aria-hidden='true'></i>"
+        }
+    
+    }
+    
 </script>
 
 

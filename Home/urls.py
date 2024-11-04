@@ -5,10 +5,19 @@ from Home import views
 
 urlpatterns = [
     path('', views.index, name='home'),
+
     path('addEmployee', views.AddEmployee, name='addEmployee'),
+    path('GetemployeeData', views.GetemployeeData, name='GetemployeeData'),
+    path('editEmployee/<int:id>/', views.editEmployee, name='editEmployee'),
+    path('deleteEmployee/<int:id>/', views.deleteEmployee, name='deleteEmployee'),
+
+    path('UDCMaster', views.UDCMaster, name='UDCMaster'),
+    path('GetUDCHeaders', views.GetUDCHeaders, name='GetUDCHeaders'),
+    path('GetUDCData', views.GetUDCData, name='GetUDCData'),
+
     path('UDCAddUpdate', views.UDCAddUpdate, name='UDCAddUpdate'),
     path('empMaster', views.empMaster, name='empMaster'),
     path('contact', views.contact, name='contact'),
     path('emplMaster', views.emplMaster, name='emplMaster'),
-    path('UDCMaster', views.UDCMaster, name='UDCMaster'),
+    path('test', views.test, name='test'),
 ]
