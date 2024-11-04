@@ -162,3 +162,4 @@ cython_debug/
 #.idea/
 /.vs/New folder - Copy/FileContentIndex
 /templates/_Layout.html
+/.vs/slnx.sqlite

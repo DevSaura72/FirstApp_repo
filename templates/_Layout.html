@@ -4,6 +4,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="static/CSS/Theme.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
@@ -32,10 +35,11 @@
                 App Data
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="/empMaster">Employee Master</a>
-                <a class="dropdown-item" href="/emplMaster">Emp Master</a>
+                {% comment %} <-- <a class="dropdown-item" href="/empMaster">Employee Master</a> --> {% endcomment %}
+                <a class="dropdown-item" href="/emplMaster">Employee Master</a>
                 <a class="dropdown-item" href="/UDCMaster">UDC Master</a>
                 <a class="dropdown-item" href="/UDCAddUpdate">UDC addUpdate</a>
+                <a class="dropdown-item" href="/test">Test</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="/contact">Application Log</a>
               </div>
