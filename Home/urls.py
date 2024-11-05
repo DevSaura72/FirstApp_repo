@@ -14,8 +14,9 @@ urlpatterns = [
     path('UDCMaster', views.UDCMaster, name='UDCMaster'),
     path('GetUDCHeaders', views.GetUDCHeaders, name='GetUDCHeaders'),
     path('GetUDCData', views.GetUDCData, name='GetUDCData'),
+    path('UDCAddHeader', views.UDCAddHeader, name='UDCAddHeader'),
+    path('UDCAddData', views.UDCAddData, name='UDCAddData'),
 
-    path('UDCAddUpdate', views.UDCAddUpdate, name='UDCAddUpdate'),
     #path('empMaster', views.empMaster, name='empMaster'),
     path('contact', views.contact, name='contact'),
     path('emplMaster', views.emplMaster, name='emplMaster'),

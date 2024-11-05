@@ -7,10 +7,10 @@
     <div class="chartbg">
         <div class="row">
             <div class="col-12">
-                <div class="card-body">
+                <div class="d-flex justify-content-between">
                     <h4 class="heading">
-                        Headers
-                    </h4>
+                    Headers </h4>
+                    <a href="/UDCAddHeader"><button class="btn btn-outline-success" type="button">Add Headers</button></a>
                 </div>
             </div>
         </div>
@@ -19,24 +19,6 @@
             <div class="col-12">
                 <div id="Header-grid" data-step="6" data-intro="Header Info"></div>
                 <table id="UDCHeaders" class="display nowrap">
-                    {% comment %} <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Header</th>
-                            <th>description</th>
-                            <th>IsDeleted</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for udc in headers %}
-                        <tr>
-                            <td>{{ udc.id }}</td>
-                            <td>{{ udc.Header }}</td>
-                            <td>{{ udc.description }}</td>
-                            <td>{{ udc.IsDeleted }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody> {% endcomment %}
                 </table>
             </div>
         </div>
@@ -49,10 +31,10 @@
     <div class="chartbg">
         <div class="row">
             <div class="col-12">
-                <div class="card-body">
+                <div class="d-flex justify-content-between">
                     <h4 class="heading">
-                        Dropdown Data
-                    </h4>
+                        Dropdown Data </h4>
+                    <a href="/UDCAddData"><button class="btn btn-outline-success" type="button">Add Dropdown Data</button></a>
                 </div>
             </div>
         </div>

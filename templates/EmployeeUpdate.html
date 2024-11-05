@@ -19,10 +19,9 @@
     <div class="chartbg">
         <div class="row">
             <div class="col-12">
-                <div class="card-body">
-                    <h4 class="heading">
-                        Employee details
-                    </h4>
+                <div class="card-body d-flex justify-content-between align-items-center">
+                    <h4 class="heading mb-0">Employee details</h4>
+                    <a href="{% url 'emplMaster' %}"><button class="btn btn-grey" type="button">Back To List</button></a>
                 </div>
             </div>
         </div>
@@ -172,13 +171,7 @@
                     <button class="btn btn-primary" type="submit">submit</button>
                 </div>
             </div> 
-       </div>  
-       <pre>
-        Employee WorkLocationID: {{ employee.WorkLocationID.id}}
-    </pre>
-    <pre>
-        Employee EmploymentTypeID: {{ employee.EmploymentTypeID.id}}
-    </pre>             
+       </div>               
        </div>
     </div>
 </div>
@@ -186,14 +179,18 @@
 
 <script>
     $(function() {
+        var employeeDOB = "{{ employee.DOB }}";
+        var dobDate = new Date(employeeDOB);
+
         $("#dob").datepicker({
-            dateFormat: "yyyy-mm-dd" // Change format as needed
+            dateFormat: "yy-mm-dd", 
+            changeMonth: true,       
+            changeYear: true,       
+            yearRange: "1950:2050",
+
+            defaultDate: dobDate,
+            setDate: dobDate
         });
-    
-        // Disable editing of the textbox
-        // $("#dob").on('focus', function() {
-        //     $(this).blur(); // Prevents the input from being edited
-        // });
     });
     </script>
 {% endblock body %}

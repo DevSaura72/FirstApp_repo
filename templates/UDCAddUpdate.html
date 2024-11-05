@@ -2,25 +2,32 @@
 {% block title %}UDC Master{% endblock title %}About
 {% block body %}
 <!-- <h1 class="text-center">UDC Master</h1> -->
-
-    <form method="post" action="/UDCAddUpdate">
-
+{% if isHeader %}
+    <form method="post" action="/UDCAddHeader">
+        {% else %}
+        <form method="post" action="/UDCAddData">
+        {% endif %}  
         {% csrf_token %}
         <div class="container-fluid box">
             <div class="chartbg">
                 <div class="row">
                     <div class="col-12">
-                        <div class="card-body">
+                        <div class="d-flex justify-content-between">
                             <h4 class="heading">
-                                Employee details
+                                {% if isHeader %}
+                                Add Headers
+                                    {% else %}
+                                    Add Dropdown data
+                                    {% endif %}   
                             </h4>
+                            <a href="/UDCMaster"><button class="btn btn-outline-success" type="button">Back To List</button></a>
                         </div>
                     </div>
                 </div>
                 <hr>
                 
                 <div class="row">
-        
+                    {% if isHeader %}
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card-body">
                             <div class="form-group">
@@ -40,6 +47,8 @@
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                    
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card-body">
                             <div class="form-group">
@@ -82,6 +91,7 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="col-12 col-sm-6 col-md-3">
                         <div class="card-body">
                             <div class="form-group">
