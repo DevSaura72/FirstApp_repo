@@ -57,8 +57,11 @@
             <div class="col-12 col-sm-2">
                 <div class="card-body">
                     <div class="form-group">
-                        <label for="exampleFormControlInput1">Is Active</label>
-                        <input type="text" class="form-control" id="isActive" name="isActive" placeholder="Enter to search from system" required>
+                        <label for="isHeader">Is Active</label>
+                        <div class="form-check">
+                           <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
+                           <label class="form-check-label" for="isActive">Check to search active users</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -68,7 +71,7 @@
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Department</label>
                         <select class="form-control" id="depId" name="depId" required>
-                            <option value="" disabled selected>Select Department</option>
+                            <option value="" selected>Select Department</option>
                             {% for dep in department %}
                                 <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
                             {% endfor %}
@@ -81,7 +84,7 @@
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Work Location</label>
                         <select class="form-control" id="workLocationId" name="workLocationId" required>
-                            <option value="" disabled selected>Select Working Location</option>
+                            <option value="" selected>Select Working Location</option>
                             {% for dep in workLocations %}
                                 <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
                             {% endfor %}
@@ -94,7 +97,7 @@
                     <div class="form-group">
                         <label for="exampleFormControlInput1">Employee Type</label>
                         <select class="form-control" id="employeeTypeId" name="employeeTypeId" required>
-                            <option value="" disabled selected>Select Employee Type</option>
+                            <option value="" selected>Select Employee Type</option>
                             {% for dep in employeeType %}
                                 <option value="{{ dep.id }}">{{ dep.val1 }}</option> <!-- Adjust the attribute according to your model -->
                             {% endfor %}
@@ -107,8 +110,8 @@
             <div class="col-12">
                 <div class="form-group">
                     <div class="d-flex justify-content-end">
-                        <button class="btn btn-outline-success button-spacing" type="button">Search</button>
-                        <button class="btn btn-grey" type="button">Clear</button>
+                        <button class="btn btn-outline-success button-spacing" type="button" onclick="searchFiter()">Search</button>
+                        <button class="btn btn-grey" type="button" onclick="clearFiter()">Clear</button>
                     </div>
                 </div> 
             </div>            
@@ -174,7 +177,7 @@
                 "url": "/GetemployeeData",
                 "type": "GET",
                 "datatype": "json",
-                //"data": RequestSearchData()
+                "data": RequestSearchData()
             },
             "columns": [
             {
@@ -295,7 +298,42 @@
         }
     
     }
-    
+
+    function RequestSearchData() {
+        var data = {
+
+            fName : $("#fName").val(),
+            lName : $("#lName").val(),
+            emailId: $("#emailId").val(),
+            contactNo: $("#contact").val(),
+            add: $("#address").val(),
+            isActive: $("#isActive").prop('checked'),
+            depId: $("#depId").val(),
+            workLocationId: $("#workLocationId").val(),
+            empTypeId: $("#employeeTypeId").val()
+
+        };
+        return data;
+    }
+
+    function searchFiter() {
+        //console.log(RequestSearchData());
+        LoadEmpGrid();
+    }
+
+    function clearFiter() {
+        $("#fName").val('');
+        $("#lName").val('');
+        $("#emailId").val('');
+        $("#contact").val('');
+        $("#address").val('');
+        $("#depId").val('').change();
+        $("#workLocationId").val('').change();
+        $("#employeeTypeId").val('').change();
+        $("#isActive").prop('checked', true);
+        LoadEmpGrid();
+    }
+
 </script>
 
 

@@ -14,10 +14,50 @@ def index(request):
 
 #EMPLOYEE RELATED FUNCTIONS    
 def emplMaster(request):
-    return render(request, 'EmpMaster.html')
+    department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=1)
+    workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=4)
+    employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=7)
+    return render(request, 'EmpMaster.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType, 'edit':False})
 
 def GetemployeeData(request):
     emp = Employee.objects.filter(IsDeleted = False)
+
+# Get the search filters from the request (using request.GET for GET requests)
+    contact_no = request.GET.get('contactNo', '')
+    dep_id = request.GET.get('depId', '')
+    email_id = request.GET.get('emailId', '')
+    emp_type_id = request.GET.get('empTypeId', '')
+    f_name = request.GET.get('fName', '')
+    is_active = request.GET.get('isActive', '')  # "on" or empty string
+    l_name = request.GET.get('lName', '')
+    work_location_id = request.GET.get('workLocationId', '')
+    add = request.GET.get('add','')
+    
+
+    # Apply filters based on the parameters passed in the request
+    if contact_no:
+        emp = emp.filter(ContactNo__icontains=contact_no)  
+    if dep_id:
+        emp = emp.filter(DepartmentId__id=dep_id)
+    if email_id:
+        emp = emp.filter(EmailId__icontains=email_id)
+    if emp_type_id:
+        emp = emp.filter(EmploymentTypeID__id=emp_type_id)
+    if f_name:
+        emp = emp.filter(FirstName__icontains=f_name)
+    if l_name:
+        emp = emp.filter(LastName__icontains=l_name)
+    if work_location_id:
+        emp = emp.filter(WorkLocationID__id=work_location_id)
+    if add:
+        emp = emp.filter(Address__icontains=add)
+    
+    
+    # if is_active == 'true':  
+    #     emp = emp.filter(IsDeleted=False)
+    # elif is_active == 'false':  
+    #     emp = emp.filter(IsDeleted=True)
+
 
     _list = []
     for record in emp:
@@ -35,7 +75,7 @@ def GetemployeeData(request):
             'id': record.id,
             'FirstName': record.FirstName,
             'LastName': record.LastName,
-            'DOB': record.DOB,
+            'DOB': record.DOB.strftime('%Y-%m-%d'),
             'EmailId': record.EmailId,
             'ContactNo': record.ContactNo,
             'Address': record.Address.replace("|",", "),
@@ -60,7 +100,7 @@ def AddEmployee(request):
         if request.method == "POST":
             fName=request.POST.get("fName")
             lName=request.POST.get("lName")
-            dOB= "1998-08-24"               #request.POST.get("dob")
+            dOB= request.POST.get("dob")
             eId=request.POST.get("emailId")
             cNo=request.POST.get("contactNo")
             add=request.POST.get("addLine1") + "|" + request.POST.get("addLine2") + "|" + request.POST.get("city") + "|" + request.POST.get("state") + "|" + request.POST.get("pinCode")
@@ -109,7 +149,7 @@ def deleteEmployee(request, id):
 def editEmployee(request, id):
 # Fetch the employee instance or return 404 if not found
     employee = get_object_or_404(Employee, id=id)
-
+    employee.DOB = employee.DOB.strftime('%Y-%m-%d') 
     # Fetch dropdown data for departments, work locations, and employee types
     department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=1)
     workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=4)
@@ -121,7 +161,7 @@ def editEmployee(request, id):
         # Get data from the form
         fName = request.POST.get("fName")
         lName = request.POST.get("lName")
-        dOB = "1998-08-24"#request.POST.get("dob")  # Make sure the input for DOB is a valid date format
+        dOB = request.POST.get("dob") 
         eId = request.POST.get("emailId")
         cNo = request.POST.get("contactNo")
         add = request.POST.get("addLine1") + "|" + request.POST.get("addLine2") + "|" + request.POST.get("city") + "|" + request.POST.get("state") + "|" + request.POST.get("pinCode")
@@ -159,7 +199,7 @@ def editEmployee(request, id):
 
 
 #UDC RELATED FUNCTIONS
-def UDCAddUpdate(request):
+def UDCAddHeader(request):
     try:
         parents = UDC.objects.filter(IsHeader = True, IsDeleted = False)
         relations = UDC.objects.filter(IsHeader = False, IsDeleted = False)
@@ -189,9 +229,45 @@ def UDCAddUpdate(request):
                 )
              udc.save()
              messages.success(request, "Profile details updated.")
-             return render(request, 'UDCAddUpdate.html', {'parents': parents, 'relations': relations})
+             return render(request, 'UDCAddUpdate.html', {'isHeader': True})
         else:
-             return render(request, 'UDCAddUpdate.html', {'parents': parents, 'relations': relations})
+             return render(request, 'UDCAddUpdate.html', {'isHeader': True})
+    except Exception as e:
+            return HttpResponse(f"Error occurred now: {e}")
+
+def UDCAddData(request):
+    try:
+        parents = UDC.objects.filter(IsHeader = True, IsDeleted = False)
+        relations = UDC.objects.filter(IsHeader = False, IsDeleted = False)
+        if request.method == "POST":
+             hea = request.POST.get("header")
+             v1 = request.POST.get("val1")
+             v2 = request.POST.get("val2")
+             parId = request.POST.get("parentId")
+             relId = request.POST.get("relationId")
+             desc = request.POST.get("Description")
+             if request.POST.get("isHeader") == "true":
+                  isHead = True
+             else:
+                  isHead = False     
+
+             udc = UDC(
+                Header=hea,
+                val1=v1,
+                val2=v2,
+                description=desc,
+                ParentId=parId,
+                RelationId=relId,
+                CreatedBy=0,
+                CreatedOn=datetime.now(),
+                UpdatedBy=0,
+                IsHeader = isHead
+                )
+             udc.save()
+             messages.success(request, "Profile details updated.")
+             return render(request, 'UDCAddUpdate.html', {'isHeader': False, 'parents': parents, 'relations' : relations})
+        else:
+             return render(request, 'UDCAddUpdate.html', {'isHeader': False, 'parents': parents, 'relations' : relations})
     except Exception as e:
             return HttpResponse(f"Error occurred now: {e}")
 
