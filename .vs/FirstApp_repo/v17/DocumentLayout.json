@@ -1,7 +1,12 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\WorkRelated\\SAURABH\\FirstApp_repo\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\WorkRelated\\SAURABH\\FirstApp_repo\\Home\\views.py||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Home\\views.py||{8B382828-6202-11D1-8870-0000F87579D2}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,11 +14,24 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{e8b06f52-6d01-11d2-aa7d-00c04f990343}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "views.py",
+              "DocumentMoniker": "C:\\WorkRelated\\SAURABH\\FirstApp_repo\\Home\\views.py",
+              "RelativeDocumentMoniker": "Home\\views.py",
+              "ToolTip": "C:\\WorkRelated\\SAURABH\\FirstApp_repo\\Home\\views.py",
+              "RelativeToolTip": "Home\\views.py",
+              "ViewState": "AgIAAFcAAAAAAAAAAAAAAH8AAAApAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002457|",
+              "WhenOpened": "2024-11-04T17:28:16.117Z",
+              "EditorCaption": ""
             }
           ]
         }
