@@ -1,119 +1,138 @@
 {% extends "_Layout.html" %}
-{% block title %}UDC Master{% endblock title %}About
+{% block title %}UDC Master{% endblock title %}
+
 {% block body %}
 <!-- <h1 class="text-center">UDC Master</h1> -->
-{% if isHeader %}
-    <form method="post" action="/editUDCHeader">
-        {% else %}
-        <form method="post" action="/editUDCData">
-        {% endif %}  
-        {% csrf_token %}
-        <div class="container-fluid box">
-            <div class="chartbg">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="d-flex justify-content-between">
-                            <h4 class="heading">
-                                {% if isHeader %}
-                                Add Headers
-                                    {% else %}
-                                    Add Dropdown data
-                                    {% endif %}   
-                            </h4>
-                            <a href="/UDCMaster"><button class="btn btn-outline-success" type="button">Back To List</button></a>
-                        </div>
-                    </div>
-                </div>
-                <hr>
-                
-                <div class="row">
-                    {% if isHeader %}
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">Header</label>
-                                <input type="text" class="form-control" id="header" name="header" placeholder="User defined header">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="isHeader">Is Header</label>
-                                <div class="form-check">
-                                   <input type="checkbox" class="form-check-input" id="isHeader" name="isHeader" value="true">
-                                   <label class="form-check-label" for="isHeader">Check if this is a header</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% else %}
-                    
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">Val1</label>
-                                <input type="text" class="form-control" id="val1" name="val1" placeholder="Display value">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleFormControlInput1">Val2</label>
-                                <input type="text" class="form-control" id="val2" name="val2" placeholder="Actual/Aleternate value">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="parentId">Parent Id</label>
-                                <select class="form-control" id="parentId" name="parentId">
-                                    <option value="0">Select Parent</option>
-                                    {% for parent in parents %}
-                                        <option value="{{ parent.id }}">{{ parent.Header }}</option> <!-- Adjust the attribute according to your model -->
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="relationId">Relation Id</label>
-                                <select class="form-control" id="relationId" name="relationId">
-                                    <option value="0">Select Relation</option>
-                                    {% for relation in relations %}
-                                        <option value="{{ relation.id }}">{{ relation.val1 }}</option> <!-- Adjust the attribute according to your model -->
-                                    {% endfor %}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="exampleFormControlTextarea1">Description</label>
-                                <textarea class="form-control" id="Description" name="Description" rows="3"></textarea>
-                            </div>
-                        </div>
-                    </div>
 
-                    
+{% if isHeader %}
+    <form method="post" action="{% url 'editUDCHeader' header.id %}">
+{% else %}
+    <form method="post" action="{% url 'editUDCData' header.id %}">
+{% endif %}  
+    {% csrf_token %}
+    <div class="container-fluid box">
+        <div class="chartbg">
+            <div class="row">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between">
+                        <h4 class="heading">
+                            {% if isHeader %}
+                                Edit Header
+                            {% else %}
+                                Edit Dropdown Data
+                            {% endif %}
+                        </h4>
+                        <a href="/UDCMaster"><button class="btn btn-outline-success" type="button">Back To List</button></a>
+                    </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="card-body">
-                            <div class="form-group">
-                                <button class="btn btn-primary" type="submit">submit</button>
+            </div>
+            <hr>
+
+            <div class="row">
+                {% if isHeader %}
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Header</label>
+                            <input type="text" class="form-control" id="header" name="header" 
+                                value="{{ header.header }}" placeholder="User defined header" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="isHeader">Is Header</label>
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" id="isHeader" name="isHeader" 
+                                    {% if header.isHeader %}checked{% endif %} value="true">
+                                <label class="form-check-label" for="isHeader">Check if this is a header</label>
                             </div>
-                        </div> 
-                   </div>               
-                   </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% else %}
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Val1</label>
+                            <input type="text" class="form-control" id="val1" name="val1" 
+                                value="{{ data.val1 }}" placeholder="Display value">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleFormControlInput1">Val2</label>
+                            <input type="text" class="form-control" id="val2" name="val2" 
+                                value="{{ data.val2 }}" placeholder="Actual/Aleternate value">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="parentId">Parent Id</label>
+                            <select class="form-control" id="parentId" name="parentId">
+                                <option value="0">Select Parent</option>
+                                {% for parent in parents %}
+                                    <option value="{{ parent.id }}" 
+                                        {% if parent.id == data.parentId %}selected{% endif %}>
+                                        {{ parent.Header }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="relationId">Relation Id</label>
+                            <select class="form-control" id="relationId" name="relationId">
+                                <option value="0">Select Relation</option>
+                                {% for relation in relations %}
+                                    <option value="{{ relation.id }}" 
+                                        {% if relation.id == data.relationId %}selected{% endif %}>
+                                        {{ relation.val1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                {% endif %}
+
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="exampleFormControlTextarea1">Description</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="3" 
+                                required>{{ data.Description }}</textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-6 col-md-3">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <button class="btn btn-primary" type="submit">Submit</button>
+                        </div>
+                    </div> 
+                </div>               
             </div>
         </div>
-
-    </form>
+    </div>
+</form>
 {% endblock body %}
