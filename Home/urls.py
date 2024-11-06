@@ -17,6 +17,11 @@ urlpatterns = [
     path('UDCAddHeader', views.UDCAddHeader, name='UDCAddHeader'),
     path('UDCAddData', views.UDCAddData, name='UDCAddData'),
 
+    path('editUDCHeader/<int:id>/', views.editUDCHeader, name='editUDCHeader'),
+    path('deleteUDCHeader/<int:id>/', views.deleteUDCHeader, name='deleteUDCHeader'),
+    path('editUDCData/<int:id>/', views.editUDCData, name='editUDCData'),
+    path('deleteUDCData/<int:id>/', views.deleteUDCData, name='deleteUDCData'),
+
     #path('empMaster', views.empMaster, name='empMaster'),
     path('contact', views.contact, name='contact'),
     path('emplMaster', views.emplMaster, name='emplMaster'),

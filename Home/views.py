@@ -3,6 +3,7 @@ from datetime import datetime
 from .models import UDC, Employee
 from django.contrib import messages
 from django.http import JsonResponse
+from django.conf import settings
 
 # Create your views here.
 
@@ -14,9 +15,9 @@ def index(request):
 
 #EMPLOYEE RELATED FUNCTIONS    
 def emplMaster(request):
-    department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=1)
-    workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=4)
-    employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=7)
+    department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 1)
+    workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 4)
+    employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 7)
     return render(request, 'EmpMaster.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType, 'edit':False})
 
 def GetemployeeData(request):
@@ -94,9 +95,9 @@ def GetemployeeData(request):
 
 def AddEmployee(request):
     try:
-        department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=1)
-        workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=4)
-        employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId=7)
+        department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 1)
+        workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 4)
+        employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 7)
         if request.method == "POST":
             fName=request.POST.get("fName")
             lName=request.POST.get("lName")
@@ -151,9 +152,9 @@ def editEmployee(request, id):
     employee = get_object_or_404(Employee, id=id)
     employee.DOB = employee.DOB.strftime('%Y-%m-%d') 
     # Fetch dropdown data for departments, work locations, and employee types
-    department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=1)
-    workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=4)
-    employeeType = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId=7)
+    department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 1)
+    workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 4)
+    employeeType = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 7)
     address_parts = employee.Address.split('|') if employee.Address else ['', '', '', '','']
 
 
@@ -271,6 +272,40 @@ def UDCAddData(request):
     except Exception as e:
             return HttpResponse(f"Error occurred now: {e}")
 
+
+def editUDCHeader(request, id):
+     try:
+          header = UDC.objects.get(id = id)
+          header.IsDeleted = True
+          header.save()
+     except UDC.DoesNotExist:
+          messages.error(request, "Not found.")
+     return render(request, 'UDCUpdate.html')
+
+def deleteUDCHeader(request, id):
+     try:
+          header = UDC.objects.get(id = id)
+          header.IsDeleted = True
+          header.save()
+     except UDC.DoesNotExist:
+          messages.error(request, "Not found.")
+     return redirect('UDCMaster')
+
+def editUDCData(request, id):
+     return request
+     
+def deleteUDCData(request, id):
+     try:
+          data = UDC.objects.get(id = id)
+          data.IsDeleted = True
+          data.save()
+     except data.DoesNotExist:
+          messages.error(request, "Not found.")
+     return redirect('UDCMaster')
+
+
+
+
 def contact(request):
     return render(request, 'contact.html')
 
@@ -299,6 +334,7 @@ def GetUDCData(request):
         
         # Append the required data, including the parent name
         _list.append({
+             'id': record.id,
             'val1': record.val1,
             'val2': record.val2,
             'description': record.description,
