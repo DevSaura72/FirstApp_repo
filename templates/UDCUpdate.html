@@ -5,9 +5,9 @@
 <!-- <h1 class="text-center">UDC Master</h1> -->
 
 {% if isHeader %}
-    <form method="post" action="{% url 'editUDCHeader' header.id %}">
+    <form method="post" action="{% url 'editUDCHeader' udc.id %}">
 {% else %}
-    <form method="post" action="{% url 'editUDCData' header.id %}">
+    <form method="post" action="{% url 'editUDCData' udc.id %}">
 {% endif %}  
     {% csrf_token %}
     <div class="container-fluid box">
@@ -35,7 +35,7 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Header</label>
                             <input type="text" class="form-control" id="header" name="header" 
-                                value="{{ header.header }}" placeholder="User defined header" required>
+                                value="{{ udc.header }}" placeholder="User defined header" required>
                         </div>
                     </div>
                 </div>
@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Val1</label>
                             <input type="text" class="form-control" id="val1" name="val1" 
-                                value="{{ data.val1 }}" placeholder="Display value">
+                                value="{{ udc.val1 }}" placeholder="Display value">
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
                         <div class="form-group">
                             <label for="exampleFormControlInput1">Val2</label>
                             <input type="text" class="form-control" id="val2" name="val2" 
-                                value="{{ data.val2 }}" placeholder="Actual/Aleternate value">
+                                value="{{ udc.val2 }}" placeholder="Actual/Aleternate value">
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
                                 <option value="0">Select Parent</option>
                                 {% for parent in parents %}
                                     <option value="{{ parent.id }}" 
-                                        {% if parent.id == data.parentId %}selected{% endif %}>
+                                        {% if parent.id == udc.parentId %}selected{% endif %}>
                                         {{ parent.Header }}
                                     </option>
                                 {% endfor %}
@@ -100,7 +100,7 @@
                                 <option value="0">Select Relation</option>
                                 {% for relation in relations %}
                                     <option value="{{ relation.id }}" 
-                                        {% if relation.id == data.relationId %}selected{% endif %}>
+                                        {% if relation.id == udc.relationId %}selected{% endif %}>
                                         {{ relation.val1 }}
                                     </option>
                                 {% endfor %}

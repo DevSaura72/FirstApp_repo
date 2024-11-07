@@ -1,3 +1,4 @@
+from operator import __le__
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from datetime import datetime
 from .models import UDC, Employee
@@ -15,9 +16,9 @@ def index(request):
 
 #EMPLOYEE RELATED FUNCTIONS    
 def emplMaster(request):
-    department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 4)
-    workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 7)
-    employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 10)
+    department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 1)
+    workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 4)
+    employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 7)
     return render(request, 'EmpMaster.html', {'department': department, 'workLocations': workLocations, 'employeeType': employeeType, 'edit':False})
 
 def GetemployeeData(request):
@@ -95,9 +96,9 @@ def GetemployeeData(request):
 
 def AddEmployee(request):
     try:
-        department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 4)
-        workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 7)
-        employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 10)
+        department = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 1)
+        workLocations = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 4)
+        employeeType = UDC.objects.filter(IsHeader = False, IsDeleted = False, ParentId= 7)
         if request.method == "POST":
             fName=request.POST.get("fName")
             lName=request.POST.get("lName")
@@ -152,9 +153,9 @@ def editEmployee(request, id):
     employee = get_object_or_404(Employee, id=id)
     employee.DOB = employee.DOB.strftime('%Y-%m-%d') 
     # Fetch dropdown data for departments, work locations, and employee types
-    department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 4)
-    workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 7)
-    employeeType = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 7)
+    department = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 1)
+    workLocations = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 4)
+    employeeType = UDC.objects.filter(IsHeader=False, IsDeleted=False, ParentId= 4)
     address_parts = employee.Address.split('|') if employee.Address else ['', '', '', '','']
 
 
@@ -276,14 +277,13 @@ def UDCAddData(request):
 def editUDCHeader(request, id):
      try:
           header = UDC.objects.get(id = id)
-          header.save()
 
           if request.method == "POSt":
                header.id = request.get('')
                return redirect('UDCMaster')
      except UDC.DoesNotExist:
           messages.error(request, "Not found.")
-     return render(request, 'UDCUpdate.html', {'isHeader' : True, 'header':header})
+     return render(request, 'UDCUpdate.html', {'isHeader' : True, 'udc':header})
 
 def deleteUDCHeader(request, id):
      try:
@@ -296,15 +296,16 @@ def deleteUDCHeader(request, id):
 
 def editUDCData(request, id):
      try:
-          header = UDC.objects.get(id = id)
-          header.save()
+        parents = UDC.objects.filter(IsHeader = True, IsDeleted = False)
+        relations = UDC.objects.filter(IsHeader = False, IsDeleted = False)
+        header = UDC.objects.get(id = id)
 
-          if request.method == "POSt":
+        if request.method == "POSt":
                header.id = request.get('')
                return redirect('UDCMaster')
      except UDC.DoesNotExist:
           messages.error(request, "Not found.")
-     return render(request, 'UDCUpdate.html', {'isHeader' : False, 'header':header})
+     return render(request, 'UDCUpdate.html', {'isHeader' : False, 'udc':header, 'parents': parents, 'relations' : relations})
      
 def deleteUDCData(request, id):
      try:
@@ -330,7 +331,10 @@ def GetUDCHeaders(request):
     #udc = UDC.objects.filter(IsHeader = False, IsDeleted = False)
     headers = UDC.objects.filter(IsHeader = True, IsDeleted = False)
     headers_list = list(headers.values('id', 'Header', 'IsHeader', 'description', 'IsDeleted'))
-    return JsonResponse({'data': headers_list})
+    a = len(headers_list)
+    return JsonResponse({'data': headers_list,
+        'recordsFiltered' : a,
+        'recordsTotal' : a })
 
 def GetUDCData(request):
 
@@ -355,7 +359,10 @@ def GetUDCData(request):
             'IsDeleted': record.IsDeleted,
         })
 
-    return JsonResponse({'data': _list})
+    a = len(_list)
+    return JsonResponse({'data': _list,
+        'recordsFiltered' : a,
+        'recordsTotal' : a })
 
      
 
